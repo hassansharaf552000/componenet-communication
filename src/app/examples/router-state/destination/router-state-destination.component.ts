@@ -1,7 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import { RouterStateService } from '../router-state.service';
 import { 
   LearningNotesComponent,
   CodeExamplesComponent,
@@ -37,11 +40,13 @@ interface ProcessingResult {
   templateUrl: './router-state-destination.component.html',
   styleUrls: ['./router-state-destination.component.css']
 })
-export class RouterStateDestinationComponent {
+export class RouterStateDestinationComponent implements OnInit {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private routerStateService = inject(RouterStateService);
   
   // Component state
-  componentRole: 'source' | 'destination' = 'source';
+  componentRole: 'source' | 'destination' = 'destination';
   
   // Demo data
   demoData = {
@@ -80,12 +85,137 @@ export class RouterStateDestinationComponent {
   processingResults: ProcessingResult[] = [];
   
   ngOnInit() {
-    // Check if we have received state in navigation
-    const navigation = this.router.getCurrentNavigation();
-    if (navigation?.extras.state) {
-      this.receivedState = navigation.extras.state;
+    console.log('🎯 DESTINATION COMPONENT INITIALIZED');
+    
+    // Method 1: Subscribe to service (immediate)
+    this.routerStateService.state$.subscribe(state => {
+      if (state) {
+        console.log('📥 RECEIVED VIA SERVICE:', state);
+        this.receivedState = state;
+        this.componentRole = 'destination';
+        this.addToHistory('received', this.router.url, Object.keys(this.receivedState));
+        this.addProcessingResult('state_received', 'success', `Received state with ${Object.keys(this.receivedState).length} properties`);
+        // Don't clear service state here - let service auto-clear
+        return; // Exit early if service worked
+      }
+    });
+    
+    // Method 2: Check query params for dataId
+    this.route.queryParams.subscribe(params => {
+      const dataId = params['dataId'];
+      if (dataId && !this.receivedState) {
+        console.log('🔍 Found dataId in query params:', dataId);
+        const storedData = sessionStorage.getItem(dataId);
+        if (storedData) {
+          try {
+            this.receivedState = JSON.parse(storedData);
+            console.log('📥 RECEIVED VIA QUERY PARAM:', this.receivedState);
+            this.componentRole = 'destination';
+            this.addToHistory('received', this.router.url, Object.keys(this.receivedState));
+            this.addProcessingResult('state_received', 'success', `Received state with ${Object.keys(this.receivedState).length} properties`);
+            // Clean up
+            sessionStorage.removeItem(dataId);
+            return;
+          } catch (e) {
+            console.error('❌ Failed to parse query param data:', e);
+          }
+        }
+      }
+    });
+    
+    // Method 3: Listen for navigation events to catch subsequent navigations
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (event.url.includes('/examples/router-state/destination')) {
+          console.log('🔄 NAVIGATION TO DESTINATION DETECTED:', event.url);
+          setTimeout(() => {
+            this.checkForNewState();
+          }, 50);
+        }
+      });
+    
+    // Method 4: Fallback checks
+    setTimeout(() => {
+      if (!this.receivedState) {
+        console.log('🔄 TRYING FALLBACK METHODS...');
+        this.tryGetRouterState();
+      }
+    }, 100);
+  }
+
+  private checkForNewState() {
+    const serviceState = this.routerStateService.getRouterState();
+    if (serviceState && serviceState.navigationId !== this.receivedState?.navigationId) {
+      console.log('🆕 NEW STATE DETECTED:', serviceState);
+      this.receivedState = serviceState;
       this.componentRole = 'destination';
-      this.addToHistory('received', '/current-route', Object.keys(this.receivedState));
+      this.addToHistory('received', this.router.url, Object.keys(this.receivedState));
+      this.addProcessingResult('state_received', 'success', `Received NEW state with ${Object.keys(this.receivedState).length} properties`);
+    }
+  }
+
+  private tryGetRouterState() {
+    let stateFound = false;
+    
+    // Method 1: Check service state (most reliable - immediate access)
+    const serviceState = this.routerStateService.getRouterState();
+    if (serviceState) {
+      console.log('Navigation state received via RouterStateService:', serviceState);
+      this.receivedState = serviceState;
+      this.componentRole = 'destination';
+      stateFound = true;
+      // Don't clear service state here - let service auto-clear
+    }
+    
+    // Method 2: Check current navigation (works during navigation)
+    if (!stateFound) {
+      const navigation = this.router.getCurrentNavigation();
+      console.log('Current navigation:', navigation);
+      
+      if (navigation?.extras?.state) {
+        console.log('Navigation state received via getCurrentNavigation():', navigation.extras.state);
+        this.receivedState = navigation.extras.state;
+        this.componentRole = 'destination';
+        stateFound = true;
+      }
+    }
+    
+    // Method 3: Check sessionStorage (fallback)
+    if (!stateFound) {
+      const storedState = sessionStorage.getItem('routerState');
+      console.log('Checking sessionStorage for routerState:', storedState);
+      if (storedState) {
+        try {
+          this.receivedState = JSON.parse(storedState);
+          console.log('Navigation state received via sessionStorage:', this.receivedState);
+          this.componentRole = 'destination';
+          stateFound = true;
+          // Clean up after use
+          sessionStorage.removeItem('routerState');
+        } catch (e) {
+          console.error('Error parsing stored router state:', e);
+        }
+      }
+    }
+    
+    // Method 4: Check history.state as additional fallback
+    if (!stateFound && window.history.state) {
+      console.log('Checking window.history.state:', window.history.state);
+      if (window.history.state.navigationId || window.history.state.type) {
+        this.receivedState = window.history.state;
+        console.log('Navigation state received via window.history.state:', this.receivedState);
+        this.componentRole = 'destination';
+        stateFound = true;
+      }
+    }
+    
+    if (stateFound) {
+      this.addToHistory('received', this.router.url, Object.keys(this.receivedState));
+      this.addProcessingResult('state_received', 'success', `Received state with ${Object.keys(this.receivedState).length} properties`);
+    } else {
+      console.log('No navigation state found in any method');
+      this.addProcessingResult('state_check', 'warning', 'No navigation state found via any method');
     }
   }
   
@@ -107,8 +237,8 @@ export class RouterStateDestinationComponent {
       data: this.demoData.userPreferences
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-user', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-user', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithSessionData() {
@@ -118,8 +248,8 @@ export class RouterStateDestinationComponent {
       data: this.demoData.sessionData
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-session', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-session', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithAppState() {
@@ -129,8 +259,8 @@ export class RouterStateDestinationComponent {
       data: this.demoData.appState
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-app', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-app', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithCompleteData() {
@@ -140,8 +270,8 @@ export class RouterStateDestinationComponent {
       data: this.demoData
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-complete', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-complete', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithCustomData() {
@@ -157,12 +287,14 @@ export class RouterStateDestinationComponent {
         }
       };
       
-      this.navigateWithState(state, '/router-state/destination');
-      this.addToHistory('sent-custom', '/router-state/destination', Object.keys(state));
+      this.navigateWithState(state, '/examples/router-state/destination');
+      this.addToHistory('sent-custom', '/examples/router-state/destination', Object.keys(state));
     } catch (error) {
       this.addProcessingResult('navigate-custom', 'error', `Failed to parse custom data: ${error}`);
     }
   }
+
+
   
   private navigateWithState(state: any, route: string) {
     this.router.navigate([route], { state });

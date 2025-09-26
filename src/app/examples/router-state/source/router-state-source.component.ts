@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterStateService } from '../router-state.service';
 import { 
   LearningNotesComponent,
   CodeExamplesComponent,
@@ -37,8 +38,9 @@ interface ProcessingResult {
   templateUrl: './router-state-source.component.html',
   styleUrls: ['./router-state-source.component.css']
 })
-export class RouterStateSourceComponent {
+export class RouterStateSourceComponent implements OnInit {
   private router = inject(Router);
+  private routerStateService = inject(RouterStateService);
   
   // Component state
   componentRole: 'source' | 'destination' = 'source';
@@ -80,9 +82,13 @@ export class RouterStateSourceComponent {
   processingResults: ProcessingResult[] = [];
   
   ngOnInit() {
+    console.log('🚀 Source component initialized');
+    console.log('📍 Initial componentRole:', this.componentRole);
+    
     // Check if we have received state in navigation
     const navigation = this.router.getCurrentNavigation();
     if (navigation?.extras.state) {
+      console.log('📥 Received state on init:', navigation.extras.state);
       this.receivedState = navigation.extras.state;
       this.componentRole = 'destination';
       this.addToHistory('received', '/current-route', Object.keys(this.receivedState));
@@ -91,60 +97,67 @@ export class RouterStateSourceComponent {
   
   // Component role switching
   switchToSource() {
+    console.log('🎯 Switching to source component');
     this.componentRole = 'source';
     this.receivedState = null;
   }
   
   switchToDestination() {
+    console.log('🎯 Switching to destination component');
     this.componentRole = 'destination';
   }
   
   // Navigation methods
   navigateWithUserData() {
+    console.log('🔥 navigateWithUserData called - BUTTON CLICKED!');
     const state = {
       type: 'user-preferences',
       timestamp: new Date().toISOString(),
       data: this.demoData.userPreferences
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-user', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-user', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithSessionData() {
+    console.log('navigateWithSessionData called');
     const state = {
       type: 'session-data',
       timestamp: new Date().toISOString(),
       data: this.demoData.sessionData
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-session', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-session', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithAppState() {
+    console.log('navigateWithAppState called');
     const state = {
       type: 'app-state',
       timestamp: new Date().toISOString(),
       data: this.demoData.appState
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-app', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-app', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithCompleteData() {
+    console.log('navigateWithCompleteData called');
     const state = {
       type: 'complete-data',
       timestamp: new Date().toISOString(),
       data: this.demoData
     };
     
-    this.navigateWithState(state, '/router-state/destination');
-    this.addToHistory('sent-complete', '/router-state/destination', Object.keys(state));
+    this.navigateWithState(state, '/examples/router-state/destination');
+    this.addToHistory('sent-complete', '/examples/router-state/destination', Object.keys(state));
   }
   
   navigateWithCustomData() {
+    console.log('navigateWithCustomData called');
     try {
       const metadata = this.customData.metadata ? JSON.parse(this.customData.metadata) : {};
       
@@ -157,15 +170,54 @@ export class RouterStateSourceComponent {
         }
       };
       
-      this.navigateWithState(state, '/router-state/destination');
-      this.addToHistory('sent-custom', '/router-state/destination', Object.keys(state));
+      this.navigateWithState(state, '/examples/router-state/destination');
+      this.addToHistory('sent-custom', '/examples/router-state/destination', Object.keys(state));
     } catch (error) {
+      console.error('Custom data navigation error:', error);
       this.addProcessingResult('navigate-custom', 'error', `Failed to parse custom data: ${error}`);
     }
   }
   
   private navigateWithState(state: any, route: string) {
-    this.router.navigate([route], { state });
+    console.log('🚀 NAVIGATION STARTED:', route, 'with state:', state);
+    
+    // Enhanced state with metadata
+    const navigationState = {
+      ...state,
+      navigationId: Date.now(),
+      sourceRoute: this.router.url
+    };
+    
+    // Store in service immediately
+    this.routerStateService.setRouterState(navigationState);
+    console.log('📦 State stored in service:', navigationState);
+    
+    // Store in sessionStorage as backup
+    try {
+      sessionStorage.setItem('routerState', JSON.stringify(navigationState));
+      console.log('💾 State stored in sessionStorage');
+    } catch (e) {
+      console.error('❌ SessionStorage failed:', e);
+    }
+    
+    // Navigate with query parameter containing data ID
+    const dataId = `state_${Date.now()}`;
+    sessionStorage.setItem(dataId, JSON.stringify(navigationState));
+    
+    this.router.navigate([route], { 
+      queryParams: { dataId: dataId },
+      state: navigationState
+    }).then(
+      success => {
+        console.log('✅ Navigation completed:', success);
+        if (!success) {
+          console.error('❌ Navigation failed');
+        }
+      },
+      error => {
+        console.error('❌ Navigation error:', error);
+      }
+    );
   }
   
   private parseCustomValue(value: string, type: string): any {
