@@ -1,0 +1,268 @@
+<div class="page-container">
+  <!-- Component Role Selector -->
+  <div class="component-selector">
+    <h4>🎯 Component Role</h4>
+    <div class="role-buttons">
+      <button 
+        class="role-btn" 
+        [class.active]="componentRole === 'source'"
+        (click)="switchToSource()">
+        📤 Source Component
+      </button>
+      <button 
+        class="role-btn" 
+        [class.active]="componentRole === 'destination'"
+        (click)="switchToDestination()">
+        📥 Destination Component
+      </button>
+    </div>
+  </div>
+
+  <!-- Source Component Demo -->
+  <div *ngIf="componentRole === 'source'" class="demo-section">
+    <div class="component-header">
+      <span class="component-badge source">📤 Source Component</span>
+      <p>This component sends data via router state during navigation</p>
+    </div>
+
+    <div class="source-demo">
+      <div class="demo-data">
+        <h4>📦 Demo Data Available</h4>
+        <div class="data-preview">
+          <div class="data-item">
+            <span class="data-icon">👤</span>
+            <div class="data-details">
+              <strong>User Preferences</strong>
+              <small>Theme, language, notification settings</small>
+            </div>
+            <span class="data-value">3 properties</span>
+          </div>
+          <div class="data-item">
+            <span class="data-icon">🔐</span>
+            <div class="data-details">
+              <strong>Session Data</strong>
+              <small>User ID, role, permissions</small>
+            </div>
+            <span class="data-value">3 properties</span>
+          </div>
+          <div class="data-item">
+            <span class="data-icon">⚙️</span>
+            <div class="data-details">
+              <strong>App State</strong>
+              <small>Current view, unsaved changes</small>
+            </div>
+            <span class="data-value">2 properties</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="navigation-buttons">
+        <button (click)="navigateWithUserData()" class="nav-btn primary">
+          <span class="btn-icon">👤</span>
+          Send User Preferences
+        </button>
+        <button (click)="navigateWithSessionData()" class="nav-btn secondary">
+          <span class="btn-icon">🔐</span>
+          Send Session Data
+        </button>
+        <button (click)="navigateWithAppState()" class="nav-btn tertiary">
+          <span class="btn-icon">⚙️</span>
+          Send App State
+        </button>
+        <button (click)="navigateWithCompleteData()" class="nav-btn quaternary">
+          <span class="btn-icon">📦</span>
+          Send Complete Data
+        </button>
+      </div>
+
+      <div class="custom-data-builder">
+        <h4>🛠️ Custom Data Builder</h4>
+        <div class="builder-form">
+          <div class="form-group">
+            <label for="customKey">Key</label>
+            <input id="customKey" [(ngModel)]="customData.key" class="form-control" type="text" placeholder="Enter key name">
+          </div>
+          <div class="form-group">
+            <label for="customValue">Value</label>
+            <input id="customValue" [(ngModel)]="customData.value" class="form-control" type="text" placeholder="Enter value">
+          </div>
+          <div class="form-group">
+            <label for="customType">Type</label>
+            <select id="customType" [(ngModel)]="customData.type" class="form-control">
+              <option value="string">String</option>
+              <option value="number">Number</option>
+              <option value="boolean">Boolean</option>
+              <option value="object">Object</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="customMetadata">Metadata (JSON)</label>
+            <textarea id="customMetadata" [(ngModel)]="customData.metadata" class="form-control code-input" rows="3" placeholder='{"description": "Custom data"}'></textarea>
+          </div>
+          <button (click)="navigateWithCustomData()" class="nav-btn custom">
+            <span class="btn-icon">🚀</span>
+            Send Custom Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Destination Component Demo -->
+  <div *ngIf="componentRole === 'destination'" class="demo-section">
+    <div class="component-header">
+      <span class="component-badge destination">📥 Destination Component</span>
+      <p>This component receives data from router state during navigation</p>
+    </div>
+
+    <div class="destination-demo">
+      <div class="received-data" *ngIf="receivedState; else noData">
+        <h4>📥 Received State Data</h4>
+        
+        <div class="state-display">
+          <div class="state-metadata">
+            <div class="metadata-item">
+              <span class="metadata-label">Received At:</span>
+              <span class="metadata-value">{{ receivedState.timestamp | date:'medium' }}</span>
+            </div>
+            <div class="metadata-item">
+              <span class="metadata-label">Data Type:</span>
+              <span class="metadata-value">{{ receivedState.type || 'Object' }}</span>
+            </div>
+            <div class="metadata-item">
+              <span class="metadata-label">Size:</span>
+              <span class="metadata-value">{{ (receivedState | json).length }} bytes</span>
+            </div>
+          </div>
+
+          <div class="state-content">
+            <h5>📄 Raw Data</h5>
+            <pre class="state-json">{{ receivedState | json }}</pre>
+          </div>
+
+          <div class="state-actions">
+            <button (click)="processReceivedState()" class="action-btn process">
+              🔄 Process Data
+            </button>
+            <button (click)="exportReceivedState()" class="action-btn export">
+              💾 Export Data
+            </button>
+            <button (click)="clearReceivedState()" class="action-btn clear">
+              🗑️ Clear Data
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #noData>
+        <div class="no-data-message">
+          <div class="no-data-icon">📭</div>
+          <h4>No State Data Received</h4>
+          <p>Navigate from a source component to see router state data here.</p>
+          <button (click)="switchToSource()" class="switch-btn">
+            Switch to Source Component
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- State History -->
+  <div class="state-history" *ngIf="stateHistory.length > 0">
+    <h4>📋 State Transfer History</h4>
+    <div class="history-list">
+      <div class="history-item" *ngFor="let entry of stateHistory; let i = index" [class.current]="i === 0">
+        <div class="history-header">
+          <span class="history-time">{{ entry.timestamp | date:'HH:mm:ss' }}</span>
+          <span class="history-action">{{ entry.action }}</span>
+          <span class="history-route">{{ entry.route }}</span>
+        </div>
+        <div class="history-details">
+          <span class="state-keys">State keys: {{ entry.stateKeys.join(', ') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State Transfer Flow Visualization -->
+  <div class="state-transfer-flow">
+    <h4>🔄 Router State Flow</h4>
+    <div class="flow-diagram">
+      <div class="flow-step source-step">
+        <div class="step-icon">📤</div>
+        <div class="step-content">
+          <h5>Source Component</h5>
+          <p>Initiates navigation with state</p>
+          <div class="step-detail">
+            <code>router.navigate(['/destination'], {{ "{ state: data }" }})</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-head">▶</div>
+        <div class="arrow-label">Navigation</div>
+      </div>
+
+      <div class="flow-step router-step">
+        <div class="step-icon">🗺️</div>
+        <div class="step-content">
+          <h5>Angular Router</h5>
+          <p>Handles state transfer</p>
+          <div class="step-detail">
+            <code>history.state = data</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <div class="arrow-line"></div>
+        <div class="arrow-head">▶</div>
+        <div class="arrow-label">Delivery</div>
+      </div>
+
+      <div class="flow-step destination-step">
+        <div class="step-icon">📥</div>
+        <div class="step-content">
+          <h5>Destination Component</h5>
+          <p>Receives state data</p>
+          <div class="step-detail">
+            <code>constructor() {{ "{ this.state = history.state; }" }}</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Processing Results -->
+  <div class="processing-results" *ngIf="processingResults.length > 0">
+    <h4>⚡ Processing Results</h4>
+    <div class="results-list">
+      <div class="result-item" 
+          *ngFor="let result of processingResults; trackBy: trackByProcessingResult">
+        <div class="result-header">
+          <span class="result-time">{{ result.timestamp | date:'HH:mm:ss.SSS' }}</span>
+          <span class="result-action">{{ result.action }}</span>
+          <span class="result-status" [class]="result.status">{{ result.status }}</span>
+        </div>
+        <div class="result-details">{{ result.details }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Components -->
+  <div class="educational-section">
+    <!-- Learning Notes Component -->
+    <app-learning-notes [notes]="getLearningNotes()"></app-learning-notes>
+
+    <!-- Code Examples Component -->
+    <app-code-examples [examples]="getCodeExamples()"></app-code-examples>
+
+    <!-- Explanation Section Component -->
+    <app-explanation-section [sections]="getExplanationSections()"></app-explanation-section>
+
+    <!-- Pros and Cons Component -->
+    <app-pros-cons-section [data]="getProsAndCons()"></app-pros-cons-section>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<div class="input-container">
+  <div class="child-header">
+    <span class="component-badge child">Child Component</span>
+    <p>Focus controlled by parent via &#64;ViewChild</p>
+  </div>
+  
+  <div class="input-wrapper">
+    <label for="childInput">Controlled Input:</label>
+    <input 
+      #input 
+      id="childInput"
+      type="text" 
+      [(ngModel)]="value"
+      placeholder="Type here... (focus controlled by parent)"
+      class="child-input"
+      [class.focused]="isFocused"
+      (focus)="onFocus()"
+      (blur)="onBlur()"
+    />
+    
+    <div class="input-status">
+      <span class="status-indicator" [class.active]="isFocused">
+        {{ isFocused ? '🔥 Focused' : '💤 Not Focused' }}
+      </span>
+    </div>
+  </div>
+  
+  <div class="child-actions">
+    <button (click)="clearInput()" class="action-btn clear">
+      🧹 Clear & Focus
+    </button>
+  </div>
+</div>

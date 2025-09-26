@@ -1,0 +1,62 @@
+<div class="teaching-container">
+  <header class="page-header">
+    <h2>&#64;Input and &#64;Output</h2>
+    <p class="subtitle">Learn parent-child component communication</p>
+  </header>
+  
+  <section class="demo-section input-demo">
+    <div class="section-header">
+      <h3>&#64;Input Demo</h3>
+      <div class="flow-indicator">
+        <span class="parent-box">Parent</span>
+        <div class="arrow-down">
+          <span class="arrow-label">&#64;Input</span>
+        </div>
+        <span class="child-box">Child</span>
+      </div>
+    </div>
+    <div class="cards-container">
+      <app-user-card 
+        *ngFor="let u of users" 
+        [user]="u" 
+        class="card-animate">
+      </app-user-card>
+    </div>
+  </section>
+  
+  <section class="demo-section output-demo">
+    <div class="section-header">
+      <h3>&#64;Output Demo</h3>
+      <div class="flow-indicator">
+        <span class="child-box">Child</span>
+        <div class="arrow-up">
+          <span class="arrow-label">&#64;Output</span>
+        </div>
+        <span class="parent-box">Parent</span>
+      </div>
+    </div>
+    <div class="interaction-area">
+      <app-user-editor 
+        [user]="currentUser"
+        (userSaved)="onUserSaved($event)"
+        (userCanceled)="onUserCanceled()">
+      </app-user-editor>
+      <div class="result-display">
+        <h4>Saved Users ({{ allUsers.length }})</h4>
+        <pre class="json-display">{{ allUsers | json }}</pre>
+      </div>
+    </div>
+  </section>
+  
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+  
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+  
+  <app-explanation-section 
+    title="🎯 How It Works" 
+    icon="🎯"
+    [sections]="explanationSections">
+  </app-explanation-section>
+  
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

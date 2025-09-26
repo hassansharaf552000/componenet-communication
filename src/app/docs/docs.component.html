@@ -1,0 +1,183 @@
+<article class="docs" ngNonBindable>
+  <h2>Component Communication in Angular</h2>
+  <p>This page documents major ways Angular components communicate, each with concept, example (TypeScript + HTML), pros/cons, and best use cases.</p>
+
+  <section>
+    <h3>&#64;Input (Parent → Child)</h3>
+    <h4>Concept</h4>
+    <p>Pass data down from a parent to a child using one-way binding.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/input-output. Code: examples/input-output/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul>
+      <li>Pros: Simple, explicit, type-safe.</li>
+      <li>Cons: Only direct parent→child; deep trees need prop drilling.</li>
+    </ul>
+    <h4>Best Use Cases</h4>
+    <p>Configure presentational children; pass small view state.</p>
+  </section>
+
+  <section>
+    <h3>&#64;Output + EventEmitter (Child → Parent)</h3>
+    <h4>Concept</h4>
+    <p>Child emits events to notify parent about user actions or changes.</p>
+    <h4>Example</h4>
+    <p>See live: /examples/input-output (&#64;Output section). Code: examples/input-output/user-editor.component.ts</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul>
+      <li>Pros: Clear contracts; unidirectional data flow.</li>
+      <li>Cons: Only child→parent; cross-sibling requires bubbling.</li>
+    </ul>
+    <h4>Best Use Cases</h4>
+    <p>Submit events, selections, notifications from child to parent.</p>
+  </section>
+
+  <section>
+    <h3>&#64;ViewChild (Parent calls Child)</h3>
+    <h4>Concept</h4>
+    <p>Parent gets a reference to a child component/directive and calls methods or reads properties.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/view-child. Code: examples/view-child/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul>
+      <li>Pros: Direct imperative control when needed.</li>
+      <li>Cons: Tighter coupling; lifecycle timing concerns.</li>
+    </ul>
+    <h4>Best Use Cases</h4>
+    <p>Focus/scroll, calling child imperative APIs.</p>
+  </section>
+
+  <section>
+    <h3>Shared Service with RxJS (Subject/BehaviorSubject)</h3>
+    <h4>Concept</h4>
+    <p>Singleton service shares state and events across unrelated components.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/shared-service. Code: examples/shared-service/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Decoupled; works across app; testable.</li><li>Cons: Must manage subscriptions; implicit flows possible.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Cross-cutting events; small shared state.</p>
+  </section>
+
+  <section>
+    <h3>Router Params &amp; Query Params</h3>
+    <h4>Concept</h4>
+    <p>Use URL for identity and filters; deep-linkable and shareable.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/router-params/:id. Code: examples/router-params/user-detail.component.ts</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Bookmarkable; SEO-friendly.</li><li>Cons: Stringy; payload limits.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Resource identity; filter/search/pagination.</p>
+  </section>
+
+  <section>
+    <h3>Router State (NavigationExtras)</h3>
+    <h4>Concept</h4>
+    <p>Pass ephemeral data between routes without polluting URL; not persisted on reload.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/router-state. Code: examples/router-state/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Simple; avoids URL bloat.</li><li>Cons: Lost on refresh; not shareable.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Wizards/checkout handoff.</p>
+  </section>
+
+  <section>
+    <h3>State Management (NgRx / NGXS / Akita)</h3>
+    <h4>Concept</h4>
+    <p>Predictable centralized state with actions/selectors (choose one library).</p>
+  <h4>Example</h4>
+  <p>See live: /examples/state. Code: examples/state/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Scales, tooling, testable.</li><li>Cons: Boilerplate; learning curve.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Medium/large apps; complex shared state.</p>
+  </section>
+
+  <section>
+    <h3>Angular Signals (v16+)</h3>
+    <h4>Concept</h4>
+    <p>Fine-grained reactivity without RxJS; great for local state.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/signals. Code: examples/signals/signals.page.ts</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Minimal API; performant.</li><li>Cons: Patterns for app-wide state still evolving.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Local component/feature state; computed view state.</p>
+  </section>
+
+  <section>
+    <h3>Content Projection (ng-content)</h3>
+    <h4>Concept</h4>
+    <p>Compose templates by projecting content into slots.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/content-projection. Code: examples/content-projection/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Flexible composition.</li><li>Cons: No data back unless using inputs/outputs/DI.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Cards, layouts, shell components.</p>
+  </section>
+
+  <section>
+    <h3>Dependency Injection (InjectionToken)</h3>
+    <h4>Concept</h4>
+    <p>Provide configuration/abstractions via tokens to decouple consumers.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/injection-token. Code: examples/di/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Replaceable; testable.</li><li>Cons: Indirection can hide flow.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Feature config; strategies/adapters.</p>
+  </section>
+
+  <section>
+    <h3>Local/Session Storage</h3>
+    <h4>Concept</h4>
+    <p>Persist small key/value data in the browser; not reactive.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/storage. Code: examples/storage/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Survives reloads.</li><li>Cons: Size limits; serialization; security.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Preferences; small caches.</p>
+  </section>
+
+  <section>
+    <h3>RxJS Event Bus Pattern</h3>
+    <h4>Concept</h4>
+    <p>Pub/sub with a Subject to broadcast events across the app.</p>
+  <h4>Example</h4>
+  <p>See live: /examples/event-bus. Code: examples/event-bus/*</p>
+    <h4>Pros &amp; Cons</h4>
+    <ul><li>Pros: Decoupled; multi-listener.</li><li>Cons: Harder to trace; leaks if unmanaged.</li></ul>
+    <h4>Best Use Cases</h4>
+    <p>Toasts, modals, cross-feature notifications.</p>
+  </section>
+
+  <section>
+    <h3>Comparison</h3>
+    <table class="table">
+      <thead>
+        <tr><th>Method</th><th>Direction</th><th>Lifetime</th><th>Scope</th><th>Complexity</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&#64;Input</td><td>Parent→Child</td><td>Ephemeral</td><td>Direct</td><td>Low</td><td>Pass view data</td></tr>
+        <tr><td>&#64;Output</td><td>Child→Parent</td><td>Ephemeral</td><td>Direct</td><td>Low</td><td>User actions</td></tr>
+        <tr><td>&#64;ViewChild</td><td>Imperative</td><td>Ephemeral</td><td>Direct</td><td>Low–Med</td><td>Focus/scroll/call</td></tr>
+        <tr><td>Shared Service</td><td>Any↔Any</td><td>Short</td><td>Feature/App</td><td>Med</td><td>Share small state</td></tr>
+        <tr><td>Router Params</td><td>URL</td><td>Persistent</td><td>Route</td><td>Low</td><td>Identity</td></tr>
+        <tr><td>Query Params</td><td>URL</td><td>Persistent</td><td>Route</td><td>Low</td><td>Filters</td></tr>
+        <tr><td>Router State</td><td>Nav state</td><td>Ephemeral</td><td>Route</td><td>Low</td><td>Wizard handoff</td></tr>
+        <tr><td>NgRx/NGXS/Akita</td><td>Any↔Any</td><td>In-memory</td><td>App</td><td>Med–High</td><td>Large shared state</td></tr>
+        <tr><td>Signals</td><td>Parent/Child</td><td>Ephemeral</td><td>Component</td><td>Low</td><td>Local reactive state</td></tr>
+        <tr><td>Content Projection</td><td>Template</td><td>N/A</td><td>Component</td><td>Low</td><td>Layout/slots</td></tr>
+        <tr><td>InjectionToken</td><td>Provider→Consumer</td><td>Persistent</td><td>Feature/App</td><td>Low</td><td>Config/strategies</td></tr>
+        <tr><td>Local/Session Storage</td><td>N/A</td><td>Persistent</td><td>Client</td><td>Low</td><td>Prefs/cache</td></tr>
+        <tr><td>RxJS Event Bus</td><td>Any↔Any</td><td>Ephemeral</td><td>App</td><td>Med</td><td>Notifications</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <p>See the navigation links above to run live examples for each method.</p>
+</article>

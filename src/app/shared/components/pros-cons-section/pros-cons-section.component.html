@@ -1,0 +1,34 @@
+<div class="pros-cons-section">
+  <h3 *ngIf="data.title">{{ data.title }}</h3>
+  <div class="pros-cons-grid">
+    <div class="pros-section">
+      <div class="section-header pros-header">
+        <span class="icon">✅</span>
+        <h4>Pros</h4>
+      </div>
+      <ul class="items-list">
+        <li 
+          *ngFor="let pro of data.pros" 
+          class="item"
+          [ngClass]="{ 'highlight': pro.highlight }">
+          {{ pro.text }}
+        </li>
+      </ul>
+    </div>
+    
+    <div class="cons-section">
+      <div class="section-header cons-header">
+        <span class="icon">❌</span>
+        <h4>Cons</h4>
+      </div>
+      <ul class="items-list">
+        <li 
+          *ngFor="let con of data.cons" 
+          class="item"
+          [ngClass]="{ 'highlight': con.highlight }">
+          {{ con.text }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,65 @@
+.learning-notes {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.learning-notes h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-size: 1.8rem;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.note-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-3px);
+}
+
+.note-tip {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border-left: 4px solid #27ae60;
+}
+
+.note-warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-left: 4px solid #f39c12;
+}
+
+.note-info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  border-left: 4px solid #3498db;
+}
+
+.note-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.note-content h4 {
+  margin: 0 0 0.5rem;
+  color: #2c3e50;
+  font-size: 1.2rem;
+}
+
+.note-content p {
+  margin: 0;
+  color: #34495e;
+  line-height: 1.6;
+}

@@ -1,0 +1,170 @@
+<div class="page-container">
+  <div class="demo-section">
+    <h3>💡 Concept</h3>
+    <p>
+      Router parameters enable components to communicate by passing data through the URL.
+      This includes route parameters (/user/:id), query parameters (?filter=active),
+      and fragments (#section1) that persist across page reloads and can be bookmarked.
+    </p>
+  </div>
+
+  <!-- Current Route Information -->
+  <div class="url-display">
+    <h4>📍 Current Route Information</h4>
+    <div class="url-parts">
+      <div class="url-part route-param">
+        <span class="label">Current URL:</span>
+        <span class="value">{{ currentUrl }}</span>
+      </div>
+      <div class="url-part query-params">
+        <span class="label">Matched Route:</span>
+        <span class="value">{{ matchedRoute }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Parameter Details -->
+  <div class="parameter-details" *ngIf="currentParams.length > 0">
+    <h4>📋 Active Parameters</h4>
+    <div class="param-list">
+      <div *ngFor="let param of currentParams" class="param-item">
+        <span class="param-key">{{ param.key }}:</span>
+        <span class="param-value" [ngClass]="param.type">{{ param.value }}</span>
+        <span class="param-type">{{ param.type }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Route Builder -->
+  <div class="parameter-builder">
+    <h4>🔧 Route Builder</h4>
+    <div class="builder-form">
+      <div class="form-row">
+        <label for="customId">Route Parameter (ID):</label>
+        <input 
+          id="customId"
+          [(ngModel)]="customId" 
+          placeholder="Enter user ID (e.g., 123)"
+          (input)="previewCustomRoute()"
+          class="param-input">
+      </div>
+
+      <div class="form-row">
+        <label>Query Parameters:</label>
+        <div class="query-builder">
+          <div *ngFor="let param of customQueryParams; let i = index" class="query-pair">
+            <input 
+              [(ngModel)]="param.key" 
+              placeholder="Key"
+              (input)="previewCustomRoute()"
+              class="query-input key">
+            <span>=</span>
+            <input 
+              [(ngModel)]="param.value" 
+              placeholder="Value"
+              (input)="previewCustomRoute()"
+              class="query-input value">
+            <button 
+              *ngIf="customQueryParams.length > 1" 
+              (click)="removeQueryParam(param)" 
+              class="remove-btn">❌</button>
+          </div>
+          <button (click)="addQueryParam()" class="add-btn">➕ Add Query Param</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="customFragment">Fragment:</label>
+        <input 
+          id="customFragment"
+          [(ngModel)]="customFragment" 
+          placeholder="Enter fragment (e.g., section1)"
+          (input)="previewCustomRoute()"
+          class="param-input">
+      </div>
+
+      <div class="url-preview">
+        <h5>🔍 Preview URL:</h5>
+        <code>{{ previewUrl }}</code>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          (click)="navigateToCustomRoute()" 
+          [disabled]="!customId.trim()"
+          class="build-btn">
+          🚀 Navigate to Route
+        </button>
+        <button (click)="customId = ''; customQueryParams = [{key: '', value: ''}]; customFragment = ''; previewCustomRoute()" class="preview-btn">
+          🔄 Reset Builder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Controls -->
+  <div class="navigation-controls">
+    <h4>🎯 Quick Navigation Examples</h4>
+    <div class="nav-buttons">
+      <a 
+        *ngFor="let example of quickNavExamples" 
+        (click)="navigateToExample(example)"
+        class="nav-btn primary">
+        <span class="btn-icon">🔗</span>
+        <div>
+          <div>{{ example.title }}</div>
+          <small>{{ example.route }}</small>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Parameter Monitor -->
+  <div class="parameter-details" *ngIf="parameterHistory.length > 0">
+    <h4>📜 Parameter History</h4>
+    <div class="detail-grid">
+      <div class="detail-card">
+        <h5>Navigation Timeline</h5>
+        <div class="route-info">
+          <div *ngFor="let entry of parameterHistory.slice(0, 5)" class="route-item">
+            <div class="route-label">{{ entry.timestamp | date:'HH:mm:ss' }} - {{ entry.action }}</div>
+            <div class="value">{{ entry.details }}</div>
+          </div>
+        </div>
+        <button (click)="clearHistory()" class="remove-btn" style="margin-top: 1rem;">
+          🗑️ Clear History
+        </button>
+      </div>
+      
+      <div class="detail-card">
+        <h5>Statistics</h5>
+        <div class="route-info">
+          <div class="route-item">
+            <div class="route-label">Navigation Count</div>
+            <div class="value">{{ navigationCount }}</div>
+          </div>
+          <div class="route-item">
+            <div class="route-label">Unique IDs Visited</div>
+            <div class="value">{{ uniqueIds.size }}</div>
+          </div>
+          <div class="route-item">
+            <div class="route-label">Query Keys Used</div>
+            <div class="value">{{ uniqueQueryKeys.size }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+  
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+  
+  <app-explanation-section 
+    title="🎯 How It Works" 
+    icon="🎯"
+    [sections]="explanationSections">
+  </app-explanation-section>
+  
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

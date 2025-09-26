@@ -1,0 +1,138 @@
+.input-container {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.input-container:hover {
+  border-color: #9b59b6;
+  transform: translateY(-2px);
+}
+
+.child-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.component-badge {
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.component-badge.child {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  color: white;
+}
+
+.child-header p {
+  margin: 0.5rem 0 0;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.input-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.input-wrapper label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.child-input {
+  width: 100%;
+  padding: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.child-input:focus {
+  outline: none;
+  border-color: #9b59b6;
+  box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
+  transform: scale(1.02);
+}
+
+.child-input.focused {
+  border-color: #9b59b6;
+  box-shadow: 0 0 20px rgba(155, 89, 182, 0.2);
+}
+
+.input-status {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #ecf0f1;
+  color: #7f8c8d;
+  transition: all 0.3s ease;
+}
+
+.status-indicator.active {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  color: white;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.child-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.action-btn {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+}
+
+.action-btn.clear {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(155, 89, 182, 0.4); }
+  100% { box-shadow: 0 0 15px rgba(155, 89, 182, 0.6); }
+}

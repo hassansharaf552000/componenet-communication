@@ -1,0 +1,358 @@
+<!-- Event Bus Communication Example -->
+<div class="page-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <h2>📡 Event Bus Communication</h2>
+    <p>Decoupled component communication using RxJS Subject patterns</p>
+  </div>
+
+  <!-- Educational Components -->
+  <app-learning-notes [notes]="getLearningNotes()"></app-learning-notes>
+  <app-explanation-section [sections]="getExplanationSections()"></app-explanation-section>
+
+  <!-- Live Demo Section -->
+  <div class="demo-section">
+    <h3>🎯 Live Interactive Demo</h3>
+    
+    <!-- Event Producers -->
+    <div class="producers-section">
+      <div class="section-header">
+        <h4>📤 Event Producers</h4>
+        <p>Components that emit events to the central event bus</p>
+      </div>
+      
+      <div class="producer-grid">
+        <div class="producer-card">
+          <div class="card-header">
+            <span class="card-icon">🔔</span>
+            <h5>Notification System</h5>
+          </div>
+          <app-notify-button></app-notify-button>
+        </div>
+        
+        <div class="producer-card">
+          <div class="card-header">
+            <span class="card-icon">📝</span>
+            <h5>Custom Event Creator</h5>
+          </div>
+          <div class="custom-event-form">
+            <div class="form-group">
+              <label for="eventType">Event Type:</label>
+              <select [(ngModel)]="customEvent.type" class="form-control" id="eventType">
+                <option value="user-action">User Action</option>
+                <option value="system-update">System Update</option>
+                <option value="data-change">Data Change</option>
+                <option value="navigation">Navigation</option>
+                <option value="error">Error</option>
+                <option value="success">Success</option>
+                <option value="warning">Warning</option>
+                <option value="info">Info</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="eventMessage">Message:</label>
+              <input 
+                [(ngModel)]="customEvent.message" 
+                placeholder="Enter event message..." 
+                class="form-control" 
+                id="eventMessage">
+            </div>
+            <div class="form-group">
+              <label for="eventPayload">Payload (JSON):</label>
+              <textarea 
+                [(ngModel)]="customEvent.payload" 
+                placeholder='{"key": "value"}' 
+                class="form-control code-input" 
+                rows="3" 
+                id="eventPayload"></textarea>
+            </div>
+            <button (click)="emitCustomEvent()" class="emit-btn">
+              <span class="btn-icon">📡</span>
+              Emit Custom Event
+            </button>
+          </div>
+        </div>
+        
+        <div class="producer-card">
+          <div class="card-header">
+            <span class="card-icon">⚡</span>
+            <h5>Bulk Event Generator</h5>
+          </div>
+          <div class="bulk-controls">
+            <div class="control-group">
+              <label>Event Count:</label>
+              <input 
+                [(ngModel)]="bulkEventCount" 
+                type="number" 
+                min="1" 
+                max="100" 
+                class="number-input">
+            </div>
+            <div class="control-group">
+              <label>Interval (ms):</label>
+              <input 
+                [(ngModel)]="bulkEventInterval" 
+                type="number" 
+                min="100" 
+                max="5000" 
+                class="number-input">
+            </div>
+            <div class="bulk-buttons">
+              <button (click)="startBulkEvents()" [disabled]="bulkEventsRunning" class="bulk-btn start">
+                <span class="btn-icon">▶️</span>
+                Start Bulk Events
+              </button>
+              <button (click)="stopBulkEvents()" [disabled]="!bulkEventsRunning" class="bulk-btn stop">
+                <span class="btn-icon">⏹️</span>
+                Stop
+              </button>
+            </div>
+            <div class="bulk-status" *ngIf="bulkEventsRunning">
+              <span class="status-icon">🔄</span>
+              Running... ({{ bulkEventsSent }}/{{ bulkEventCount }})
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Event Consumers -->
+    <div class="consumers-section">
+      <div class="section-header">
+        <h4>📥 Event Consumers</h4>
+        <p>Components that listen to and react to events from the bus</p>
+      </div>
+      
+      <div class="consumer-grid">
+        <div class="consumer-card">
+          <div class="card-header">
+            <span class="card-icon">🍞</span>
+            <h5>Toast Notifications</h5>
+          </div>
+          <div class="toast-container">
+            <app-toast></app-toast>
+            <div class="toast-stats">
+              <div class="stat-item">
+                <span class="stat-label">Active Toasts:</span>
+                <span class="stat-value">{{ getActiveToastCount() }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Total Shown:</span>
+                <span class="stat-value">{{ getTotalToastCount() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="consumer-card">
+          <div class="card-header">
+            <span class="card-icon">📊</span>
+            <h5>Event Analytics</h5>
+          </div>
+          <div class="analytics-dashboard">
+            <div class="metric-grid">
+              <div class="metric-card" *ngFor="let metric of getEventMetrics()">
+                <div class="metric-icon">{{ metric.icon }}</div>
+                <div class="metric-content">
+                  <div class="metric-label">{{ metric.label }}</div>
+                  <div class="metric-value">{{ metric.value }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="event-chart">
+              <h6>Events by Type</h6>
+              <div class="chart-bars">
+                <div 
+                  *ngFor="let type of getEventTypeStats()" 
+                  class="chart-bar"
+                  [style.height.%]="type.percentage">
+                  <div class="bar-value">{{ type.count }}</div>
+                  <div class="bar-label">{{ type.type }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="consumer-card">
+          <div class="card-header">
+            <span class="card-icon">🎛️</span>
+            <h5>Event Controller</h5>
+          </div>
+          <div class="controller-panel">
+            <div class="filter-controls">
+              <h6>Event Filters</h6>
+              <div class="filter-checkboxes">
+                <label *ngFor="let filter of eventFilters" class="filter-checkbox">
+                  <input 
+                    type="checkbox" 
+                    [(ngModel)]="filter.enabled">
+                  <span class="checkbox-label">{{ filter.type }}</span>
+                  <span class="filter-count">({{ filter.count }})</span>
+                </label>
+              </div>
+            </div>
+            <div class="controller-actions">
+              <button (click)="clearEventLog()" class="control-btn clear">
+                <span class="btn-icon">🗑️</span>
+                Clear Log
+              </button>
+              <button (click)="exportEventLog()" class="control-btn export">
+                <span class="btn-icon">💾</span>
+                Export Log
+              </button>
+              <button (click)="toggleEventPause()" class="control-btn" [ngClass]="eventsPaused ? 'resume' : 'pause'">
+                <span class="btn-icon">{{ eventsPaused ? '▶️' : '⏸️' }}</span>
+                {{ eventsPaused ? 'Resume' : 'Pause' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Event Log -->
+    <div class="event-log-section">
+      <div class="section-header">
+        <h4>📜 Real-time Event Log</h4>
+        <p>Live stream of all events flowing through the event bus</p>
+      </div>
+      
+      <div class="log-container">
+        <div class="log-header">
+          <div class="log-stats">
+            <span class="log-stat">
+              <strong>{{ getFilteredEventLog().length }}</strong> events shown
+            </span>
+            <span class="log-stat">
+              <strong>{{ eventLog.length }}</strong> total events
+            </span>
+            <span class="log-stat">
+              Events/min: <strong>{{ getEventsPerMinute() }}</strong>
+            </span>
+          </div>
+          <div class="log-controls">
+            <label class="auto-scroll-toggle">
+              <input type="checkbox" [(ngModel)]="autoScrollLog">
+              Auto-scroll
+            </label>
+            <select [(ngModel)]="logDisplayLimit" class="limit-select">
+              <option value="50">Show 50</option>
+              <option value="100">Show 100</option>
+              <option value="200">Show 200</option>
+              <option value="500">Show 500</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="log-list" #logContainer [ngClass]="{'auto-scroll': autoScrollLog}">
+          <div 
+            *ngFor="let event of getFilteredEventLog() | slice:0:logDisplayLimit; trackBy: trackByEventId" 
+            class="log-entry"
+            [ngClass]="'type-' + event.type">
+            <div class="log-timestamp">{{ event.timestamp | date:'HH:mm:ss.SSS' }}</div>
+            <div class="log-type">
+              <span class="type-icon">{{ getEventTypeIcon(event.type) }}</span>
+              {{ event.type }}
+            </div>
+            <div class="log-message">{{ event.message }}</div>
+            <div class="log-source">{{ event.source }}</div>
+            <div class="log-details" *ngIf="event.payload">
+              <button (click)="toggleEventDetails(event.id)" class="details-toggle">
+                {{ event.showDetails ? '▼' : '▶' }} Details
+              </button>
+              <div class="event-payload" *ngIf="event.showDetails">
+                <pre>{{ event.payload | json }}</pre>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="getFilteredEventLog().length === 0" class="no-events">
+            <div class="no-events-icon">📭</div>
+            <h5>No events to display</h5>
+            <p>Try generating some events using the producers above!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Event Bus Flow Visualization -->
+    <div class="flow-visualization">
+      <div class="section-header">
+        <h4>🔄 Event Bus Flow</h4>
+        <p>Visual representation of how events flow through the system</p>
+      </div>
+      
+      <div class="flow-diagram">
+        <div class="flow-step producer-step">
+          <div class="step-icon">📤</div>
+          <div class="step-content">
+            <h5>Producers</h5>
+            <p>Components emit events</p>
+            <div class="step-detail">
+              <code>eventBus.emit(event)</code>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">➤</div>
+          <div class="arrow-label">RxJS Subject</div>
+        </div>
+        
+        <div class="flow-step bus-step">
+          <div class="step-icon">📡</div>
+          <div class="step-content">
+            <h5>Event Bus</h5>
+            <p>Central communication hub</p>
+            <div class="step-detail">
+              <code>Subject&lt;Event&gt;</code>
+            </div>
+          </div>
+        </div>
+        
+        <div class="flow-arrow">
+          <div class="arrow-line"></div>
+          <div class="arrow-head">➤</div>
+          <div class="arrow-label">Observable Stream</div>
+        </div>
+        
+        <div class="flow-step consumer-step">
+          <div class="step-icon">📥</div>
+          <div class="step-content">
+            <h5>Consumers</h5>
+            <p>Components listen & react</p>
+            <div class="step-detail">
+              <code>eventBus.on(type).subscribe()</code>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="flow-metrics">
+        <div class="metric-item">
+          <span class="metric-icon">⚡</span>
+          <span class="metric-label">Events/sec:</span>
+          <span class="metric-value">{{ getEventsPerSecond() }}</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-icon">🔄</span>
+          <span class="metric-label">Active Subscriptions:</span>
+          <span class="metric-value">{{ getActiveSubscriptions() }}</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-icon">📊</span>
+          <span class="metric-label">Peak Events/min:</span>
+          <span class="metric-value">{{ getPeakEventsPerMinute() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Code Examples -->
+  <app-code-examples [examples]="getCodeExamples()"></app-code-examples>
+
+  <!-- Pros and Cons -->
+  <app-pros-cons-section [prosAndCons]="getProsAndCons()"></app-pros-cons-section>
+</div>

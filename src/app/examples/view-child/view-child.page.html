@@ -1,0 +1,77 @@
+<div class="teaching-container">
+  <header class="page-header">
+    <h2>🔗 &#64;ViewChild Communication</h2>
+    <p class="subtitle">Direct access to child component methods and properties</p>
+  </header>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>💡 Concept</h3>
+    </div>
+    <div class="concept-content">
+      <p>
+        &#64;ViewChild allows a parent component to directly access and interact with 
+        child component instances, methods, and properties. This creates a direct 
+        reference from parent to child.
+      </p>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>🎯 Live Demo</h3>
+      <div class="flow-indicator">
+        <span class="parent-box">Parent</span>
+        <div class="arrow-down">
+          <span class="arrow-label">Direct Access</span>
+        </div>
+        <span class="child-box">Child</span>
+      </div>
+    </div>
+    
+    <div class="interaction-area">
+      <div class="parent-controls">
+        <div class="control-header">
+          <span class="component-badge parent">Parent Component</span>
+          <p>Access child methods via &#64;ViewChild</p>
+        </div>
+        
+        <div class="button-group">
+          <button (click)="focusInput()" class="action-btn focus-btn">
+            🎯 Focus Child Input
+          </button>
+          <button (click)="clearInput()" class="action-btn clear-btn">
+            🧹 Clear Child Input
+          </button>
+          <button (click)="setInputValue()" class="action-btn set-btn">
+            ✏️ Set Child Value
+          </button>
+          <button (click)="getInputData()" class="action-btn get-btn">
+            📊 Get Child Data
+          </button>
+        </div>
+      </div>
+
+      <div class="child-area">
+        <app-focus-input #childComponent></app-focus-input>
+      </div>
+    </div>
+
+    <div class="result-display" *ngIf="childData">
+      <h4>📦 Data from Child Component</h4>
+      <pre class="json-display">{{ childData | json }}</pre>
+    </div>
+  </section>
+
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+  
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+  
+  <app-explanation-section 
+    title="🎯 How It Works" 
+    icon="🎯"
+    [sections]="explanationSections">
+  </app-explanation-section>
+  
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

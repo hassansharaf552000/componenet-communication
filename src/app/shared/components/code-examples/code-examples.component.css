@@ -1,0 +1,80 @@
+.code-examples {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.code-examples h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #ecf0f1;
+  font-size: 1.8rem;
+}
+
+.examples-container {
+  display: grid;
+  gap: 2rem;
+}
+
+.example-card {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.example-card:hover {
+  transform: translateY(-3px);
+}
+
+.example-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+}
+
+.example-header h4 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.language-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.code-container {
+  background: #2c3e50;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.code-container pre {
+  margin: 0;
+  padding: 1.5rem;
+  color: #ecf0f1;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.explanation {
+  padding: 1rem 1.5rem;
+  background: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+}
+
+.explanation p {
+  margin: 0;
+  color: #495057;
+  line-height: 1.6;
+}

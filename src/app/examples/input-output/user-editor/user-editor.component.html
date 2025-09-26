@@ -1,0 +1,59 @@
+<div class="editor-container">
+  <div class="editor-header">
+    <h4>✏️ Child Component Editor</h4>
+    <span class="output-indicator">Will emit via &#64;Output</span>
+  </div>
+  
+  <form class="editor-form" (ngSubmit)="onSave()">
+    <div class="form-group">
+      <label for="userName">Name:</label>
+      <input 
+        id="userName"
+        type="text"
+        [(ngModel)]="user.name" 
+        name="userName"
+        placeholder="Enter user name"
+        class="form-input"
+        required
+      />
+    </div>
+    
+    <div class="form-group">
+      <label for="userEmail">Email:</label>
+      <input 
+        id="userEmail"
+        type="email"
+        [(ngModel)]="user.email" 
+        name="userEmail"
+        placeholder="Enter user email"
+        class="form-input"
+        required
+      />
+    </div>
+    
+    <div class="form-group">
+      <label for="userRole">Role:</label>
+      <input 
+        id="userRole"
+        type="text"
+        [(ngModel)]="user.role" 
+        name="userRole"
+        placeholder="Enter user role"
+        class="form-input"
+      />
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="save-btn" [disabled]="!isFormValid()">
+        <span class="btn-icon">💾</span>
+        Save & Emit to Parent
+      </button>
+    </div>
+  </form>
+  
+  <div class="help-text">
+    <small>
+      💡 When you click save, this child component will emit the data to its parent using <code>&#64;Output()</code>
+    </small>
+  </div>
+</div>

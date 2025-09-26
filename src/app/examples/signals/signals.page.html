@@ -1,0 +1,177 @@
+<div class="teaching-container">
+  <header class="page-header">
+    <h2>⚡ Angular Signals</h2>
+    <p class="subtitle">Reactive state management with fine-grained reactivity</p>
+  </header>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>💡 Concept</h3>
+    </div>
+    <div class="concept-content">
+      <p>
+        Signals provide a new reactive primitive for Angular applications. They offer 
+        fine-grained reactivity, automatic dependency tracking, and improved performance 
+        compared to traditional change detection.
+      </p>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>🎯 Live Demo</h3>
+      <div class="flow-indicator">
+        <div class="signals-flow">
+          <span class="signal-box">📡 Signal</span>
+          <div class="arrow-right">
+            <span class="arrow-label">Reactive</span>
+          </div>
+          <span class="computed-box">🧮 Computed</span>
+          <div class="arrow-right">
+            <span class="arrow-label">Effect</span>
+          </div>
+          <span class="effect-box">⚡ Effect</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="signals-demos">
+      <!-- Basic Signal Demo -->
+      <div class="demo-card signal-demo">
+        <div class="card-header">
+          <h4>📡 Basic Signal</h4>
+          <span class="signal-badge">Writable</span>
+        </div>
+        <div class="demo-content">
+          <div class="controls">
+            <button (click)="incrementCounter()" class="btn increment">
+              ➕ Increment
+            </button>
+            <button (click)="decrementCounter()" class="btn decrement">
+              ➖ Decrement
+            </button>
+            <button (click)="resetCounter()" class="btn reset">
+              🔄 Reset
+            </button>
+          </div>
+          <div class="signal-display">
+            <span class="label">Counter Value:</span>
+            <span class="value">{{ counter() }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Computed Signal Demo -->
+      <div class="demo-card computed-demo">
+        <div class="card-header">
+          <h4>🧮 Computed Signal</h4>
+          <span class="computed-badge">Derived</span>
+        </div>
+        <div class="demo-content">
+          <div class="computed-displays">
+            <div class="computed-item">
+              <span class="label">Double:</span>
+              <span class="value">{{ doubleCounter() }}</span>
+            </div>
+            <div class="computed-item">
+              <span class="label">Square:</span>
+              <span class="value">{{ squareCounter() }}</span>
+            </div>
+            <div class="computed-item">
+              <span class="label">Is Even:</span>
+              <span class="value boolean" [class.true]="isEven()" [class.false]="!isEven()">
+                {{ isEven() ? '✅ Yes' : '❌ No' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Management Demo -->
+      <div class="demo-card user-demo">
+        <div class="card-header">
+          <h4>👤 User Management</h4>
+          <span class="signal-badge">Complex</span>
+        </div>
+        <div class="demo-content">
+          <div class="user-controls">
+            <input 
+              [(ngModel)]="newUserName" 
+              placeholder="Enter user name"
+              class="user-input"
+              (keyup.enter)="addUser()">
+            <button (click)="addUser()" class="btn add-user" [disabled]="!newUserName.trim()">
+              👤 Add User
+            </button>
+            <button (click)="clearUsers()" class="btn clear-users">
+              🗑️ Clear All
+            </button>
+          </div>
+          
+          <div class="user-stats">
+            <div class="stat-item">
+              <span class="label">Total Users:</span>
+              <span class="value">{{ userCount() }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="label">User Names:</span>
+              <span class="value">{{ userNames() }}</span>
+            </div>
+          </div>
+
+          <div class="user-list">
+            <div *ngFor="let user of users(); let i = index" class="user-item">
+              <span class="user-name">{{ user.name }}</span>
+              <button (click)="removeUser(i)" class="btn-small remove">❌</button>
+            </div>
+            <div *ngIf="users().length === 0" class="empty-state">
+              No users added yet
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Effects Demo -->
+      <div class="demo-card effects-demo">
+        <div class="card-header">
+          <h4>⚡ Effects</h4>
+          <span class="effect-badge">Side Effects</span>
+        </div>
+        <div class="demo-content">
+          <div class="effects-info">
+            <p>Effects automatically run when signals change:</p>
+            <ul>
+              <li>Counter changes logged to console</li>
+              <li>User changes tracked in activity log</li>
+              <li>Automatic localStorage sync</li>
+            </ul>
+          </div>
+          
+          <div class="activity-log">
+            <h5>Activity Log:</h5>
+            <div class="log-entries">
+              <div *ngFor="let entry of activityLog(); let i = index" 
+                   class="log-entry"
+                   [style.animation-delay]="i * 100 + 'ms'">
+                <span class="timestamp">{{ entry.timestamp | date:'HH:mm:ss' }}</span>
+                <span class="message">{{ entry.message }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+  
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+  
+  <app-explanation-section 
+    title="🎯 How It Works" 
+    icon="🎯"
+    [sections]="explanationSections">
+  </app-explanation-section>
+  
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

@@ -1,0 +1,7 @@
+<div *ngIf="msg" class="toast" [@slideIn]>
+  <div class="toast-content">
+    <span class="toast-icon">📨</span>
+    <span class="toast-message">{{ msg }}</span>
+  </div>
+  <button class="toast-close" (click)="closeToast()">×</button>
+</div>

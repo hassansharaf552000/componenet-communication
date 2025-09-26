@@ -1,0 +1,38 @@
+<div class="sender-container">
+  <div class="component-header">
+    <span class="component-badge sender">📤 Sender Component</span>
+    <p>Publishes messages to shared service</p>
+  </div>
+  
+  <form (ngSubmit)="send()" class="sender-form">
+    <div class="input-group">
+      <label for="messageInput">Message to send:</label>
+      <input 
+        id="messageInput"
+        type="text"
+        [(ngModel)]="text" 
+        name="message"
+        placeholder="Type your message here..."
+        class="message-input"
+        required
+        #messageInput
+      />
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" [disabled]="!text.trim()" class="send-btn">
+        📨 Send Message
+      </button>
+    </div>
+  </form>
+  
+  <div class="message-history" *ngIf="sentMessages.length > 0">
+    <h4>📝 Sent Messages</h4>
+    <div class="history-list">
+      <div *ngFor="let message of sentMessages; let i = index" class="history-item">
+        {{ i + 1 }}. {{ message }}
+      </div>
+    </div>
+    <button (click)="clearHistory()" class="clear-btn">🗑️ Clear History</button>
+  </div>
+</div>

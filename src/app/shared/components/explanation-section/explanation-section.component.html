@@ -1,0 +1,12 @@
+<div class="explanation-section">
+  <div class="section-header">
+    <span *ngIf="icon" class="section-icon">{{ icon }}</span>
+    <h3>{{ title }}</h3>
+  </div>
+  <div class="section-content">
+    <div *ngFor="let section of sections" class="content-block">
+      <h4 *ngIf="section.title">{{ section.title }}</h4>
+      <p [innerHTML]="section.content"></p>
+    </div>
+  </div>
+</div>

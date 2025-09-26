@@ -1,0 +1,140 @@
+.editor-container {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  animation: editorSlideIn 0.6s ease-out;
+}
+
+.editor-container:hover {
+  border-color: #e74c3c;
+  transform: translateY(-2px);
+}
+
+.editor-header {
+  margin-bottom: 1.5rem;
+}
+
+.editor-header h4 {
+  margin: 0 0 0.5rem;
+  color: #2c3e50;
+  font-size: 1.3rem;
+}
+
+.output-indicator {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+.editor-form {
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #34495e;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #e74c3c;
+  outline: none;
+  box-shadow: 0 0 10px rgba(231, 76, 60, 0.2);
+}
+
+.form-actions {
+  margin-top: 1.5rem;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.save-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-icon {
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+.help-text {
+  padding: 1rem;
+  background: rgba(52, 152, 219, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+.help-text small {
+  color: #2980b9;
+  line-height: 1.5;
+}
+
+.help-text code {
+  background: rgba(52, 152, 219, 0.2);
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+}
+
+@keyframes editorSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba(231, 76, 60, 0.4); }
+  100% { box-shadow: 0 0 15px rgba(231, 76, 60, 0.6); }
+}
+
+@keyframes iconBounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}

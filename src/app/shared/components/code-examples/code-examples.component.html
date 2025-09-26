@@ -1,0 +1,17 @@
+<div class="code-examples">
+  <h3>💻 Code Examples</h3>
+  <div class="examples-container">
+    <div *ngFor="let example of examples; let i = index" class="example-card">
+      <div class="example-header">
+        <h4>{{ example.title }}</h4>
+        <span class="language-badge">{{ example.language }}</span>
+      </div>
+      <div class="code-container">
+        <pre><code>{{ example.code }}</code></pre>
+      </div>
+      <div *ngIf="example.explanation" class="explanation">
+        <p>{{ example.explanation }}</p>
+      </div>
+    </div>
+  </div>
+</div>

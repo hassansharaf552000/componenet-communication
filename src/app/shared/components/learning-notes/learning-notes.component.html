@@ -1,0 +1,15 @@
+<div class="learning-notes">
+  <h3>📚 Learning Notes</h3>
+  <div class="notes-grid">
+    <div 
+      *ngFor="let note of notes" 
+      class="note-card"
+      [ngClass]="'note-' + note.type">
+      <div class="note-icon">{{ getIcon(note.type) }}</div>
+      <div class="note-content">
+        <h4>{{ note.title }}</h4>
+        <p>{{ note.content }}</p>
+      </div>
+    </div>
+  </div>
+</div>

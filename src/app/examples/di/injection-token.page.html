@@ -1,0 +1,299 @@
+<!-- Dependency Injection Tokens Page Template -->
+<div class="page-container">
+
+   <!-- Demo Section -->
+  <div class="demo-section">
+    <h3>🎯 Live Demo</h3>
+    
+    <!-- Current Configuration Display -->
+    <div class="config-display">
+      <h4>📋 Current App Configuration</h4>
+      <div class="config-grid">
+        <div class="config-item">
+          <div class="config-icon">🌐</div>
+          <div class="config-content">
+            <h5>API Base URL</h5>
+            <span class="config-value">{{ cfg.apiBase }}</span>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-icon">🔍</div>
+          <div class="config-content">
+            <h5>Debug Mode</h5>
+            <span class="config-value" [class.active]="cfg.enableDebug">
+              {{ cfg.enableDebug ? 'Enabled' : 'Disabled' }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-icon">🔄</div>
+          <div class="config-content">
+            <h5>Max Retries</h5>
+            <span class="config-value">{{ demoConfig.maxRetries }}</span>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-icon">⏱️</div>
+          <div class="config-content">
+            <h5>Timeout (ms)</h5>
+            <span class="config-value">{{ demoConfig.timeout }}</span>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-icon">🎨</div>
+          <div class="config-content">
+            <h5>Theme</h5>
+            <span class="config-value theme-badge" [attr.data-theme]="demoConfig.theme">
+              {{ demoConfig.theme }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="config-item">
+          <div class="config-icon">🌍</div>
+          <div class="config-content">
+            <h5>Supported Languages</h5>
+            <div class="language-tags">
+              <span 
+                class="language-tag" 
+                *ngFor="let lang of demoConfig.supportedLanguages"
+                [attr.data-lang]="lang">
+                {{ lang.toUpperCase() }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Configuration -->
+    <div class="interactive-config">
+      <h4>🎛️ Interactive Token Demo</h4>
+      <p>See how injection tokens work with different configuration scenarios:</p>
+      
+      <div class="demo-controls">
+        <div class="control-group">
+          <label>Environment:</label>
+          <select [(ngModel)]="selectedEnvironment" (ngModelChange)="updateEnvironmentConfig()">
+            <option value="development">Development</option>
+            <option value="staging">Staging</option>
+            <option value="production">Production</option>
+          </select>
+        </div>
+        
+        <div class="control-group">
+          <label>Feature Flags:</label>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="demoConfig.enableLogging" />
+              <span class="checkmark"></span>
+              Debug Logging
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="demoConfig.enableAnalytics" />
+              <span class="checkmark"></span>
+              Analytics
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="demoConfig.enableExperiments" />
+              <span class="checkmark"></span>
+              A/B Testing
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="demo-config-display">
+        <h5>📊 Demo Configuration Object:</h5>
+        <pre class="config-json">{{ demoConfig | json }}</pre>
+      </div>
+    </div>
+
+    <!-- Token Usage Examples -->
+    <div class="usage-examples">
+      <h4>🛠️ Common Usage Patterns</h4>
+      <div class="example-grid">
+        <div class="example-card">
+          <div class="example-icon">🌐</div>
+          <h5>API Configuration</h5>
+          <p>Base URLs, endpoints, timeout settings</p>
+          <div class="example-code">
+            <code>inject(API_CONFIG)</code>
+          </div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-icon">🎨</div>
+          <h5>Theme Settings</h5>
+          <p>Colors, fonts, layout preferences</p>
+          <div class="example-code">
+            <code>inject(THEME_CONFIG)</code>
+          </div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-icon">🔧</div>
+          <h5>Feature Flags</h5>
+          <p>Toggle functionality, A/B testing</p>
+          <div class="example-code">
+            <code>inject(FEATURE_FLAGS)</code>
+          </div>
+        </div>
+        
+        <div class="example-card">
+          <div class="example-icon">📊</div>
+          <h5>Analytics Config</h5>
+          <p>Tracking IDs, event settings</p>
+          <div class="example-code">
+            <code>inject(ANALYTICS_CONFIG)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Real-world Implementation Demo -->
+    <div class="implementation-demo">
+      <h4>🏗️ Real-world Implementation</h4>
+      <div class="demo-tabs">
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'service'"
+          (click)="activeTab = 'service'">
+          Service Usage
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'component'"
+          (click)="activeTab = 'component'">
+          Component Usage
+        </button>
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'testing'"
+          (click)="activeTab = 'testing'">
+          Testing
+        </button>
+      </div>
+
+      <div class="tab-content">
+        <div *ngIf="activeTab === 'service'" class="demo-tab">
+          <h5>📦 Service with Injected Configuration</h5>
+          <div class="service-demo">
+            <div class="service-info">
+              <h6>Current Service State:</h6>
+              <ul>
+                <li><strong>Base URL:</strong> {{ serviceExample.baseUrl }}</li>
+                <li><strong>Timeout:</strong> {{ serviceExample.timeout }}ms</li>
+                <li><strong>Retry Count:</strong> {{ serviceExample.retries }}</li>
+                <li><strong>Debug:</strong> {{ serviceExample.debug ? 'On' : 'Off' }}</li>
+              </ul>
+            </div>
+            <button class="demo-button" (click)="simulateApiCall()">
+              {{ isLoading ? 'Loading...' : 'Simulate API Call' }}
+            </button>
+            <div class="api-logs" *ngIf="apiLogs.length > 0">
+              <h6>📝 API Call Logs:</h6>
+              <div class="log-entries">
+                <div 
+                  class="log-entry" 
+                  *ngFor="let log of apiLogs; trackBy: trackByLog"
+                  [class]="log.level">
+                  <span class="log-time">{{ log.timestamp | date:'HH:mm:ss' }}</span>
+                  <span class="log-message">{{ log.message }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="activeTab === 'component'" class="demo-tab">
+          <h5>🧩 Component with Multiple Tokens</h5>
+          <div class="component-demo">
+            <div class="token-displays">
+              <div class="token-display">
+                <h6>🌐 API Token</h6>
+                <code>{{ apiTokenExample | json }}</code>
+              </div>
+              <div class="token-display">
+                <h6>🎨 Theme Token</h6>
+                <code>{{ themeTokenExample | json }}</code>
+              </div>
+              <div class="token-display">
+                <h6>🔧 Feature Token</h6>
+                <code>{{ featureTokenExample | json }}</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="activeTab === 'testing'" class="demo-tab">
+          <h5>🧪 Testing with Mock Tokens</h5>
+          <div class="testing-demo">
+            <div class="test-scenarios">
+              <button 
+                class="test-button"
+                *ngFor="let scenario of testScenarios"
+                (click)="runTestScenario(scenario)"
+                [class.active]="activeTestScenario === scenario.name">
+                {{ scenario.name }}
+              </button>
+            </div>
+            <div class="test-results" *ngIf="testResults">
+              <h6>Test Results for: {{ testResults.scenario }}</h6>
+              <div class="test-output">
+                <pre>{{ testResults.output }}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Token Benefits -->
+    <div class="benefits-section">
+      <h4>✨ Why Use Injection Tokens?</h4>
+      <div class="benefits-grid">
+        <div class="benefit-item">
+          <div class="benefit-icon">🔒</div>
+          <h5>Type Safety</h5>
+          <p>Compile-time type checking for injected values</p>
+        </div>
+        
+        <div class="benefit-item">
+          <div class="benefit-icon">🧪</div>
+          <h5>Testability</h5>
+          <p>Easy mocking and testing with custom providers</p>
+        </div>
+        
+        <div class="benefit-item">
+          <div class="benefit-icon">🔄</div>
+          <h5>Environment Flexibility</h5>
+          <p>Different configurations per environment</p>
+        </div>
+        
+        <div class="benefit-item">
+          <div class="benefit-icon">🎯</div>
+          <h5>Precise Dependencies</h5>
+          <p>Exact control over what gets injected where</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Learning Notes Component -->
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+
+  <!-- Code Examples Component -->
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+
+  <!-- Explanation Sections Component -->
+  <app-explanation-section [sections]="explanationSections"></app-explanation-section>
+
+ 
+
+  <!-- Pros and Cons Component -->
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

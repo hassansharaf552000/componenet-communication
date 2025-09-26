@@ -1,0 +1,216 @@
+<!-- Content Projection Page Template -->
+<div class="page-container">
+
+ <!-- Demo Section -->
+  <div class="demo-section">
+    <h3>🎯 Live Demo</h3>
+    
+    <div class="projection-examples">
+      <!-- Single Slot Projection -->
+      <div class="example-group">
+        <h4>🎪 Single Slot Projection</h4>
+        <div class="example-container">
+          <app-card>
+            <div class="projected-content single">
+              <h3>🌟 Welcome!</h3>
+              <p>This content is projected into the card component using ng-content.</p>
+              <button class="demo-btn">Click Me!</button>
+            </div>
+          </app-card>
+        </div>
+      </div>
+
+      <!-- Multi-Slot Projection -->
+      <div class="example-group">
+        <h4>🎭 Multi-Slot Projection</h4>
+        <div class="example-container">
+          <app-card>
+            <div header class="projected-header">
+              <span class="header-icon">🎯</span>
+              <span class="header-title">Dynamic Header</span>
+              <span class="header-badge">NEW</span>
+            </div>
+            
+            <div class="projected-body">
+              <h4>📝 Main Content Area</h4>
+              <p>This is the main body content that gets projected into the default slot.</p>
+              <ul class="feature-list">
+                <li>✅ Flexible layout</li>
+                <li>✅ Reusable components</li>
+                <li>✅ Clean separation</li>
+              </ul>
+            </div>
+            
+            <div footer class="projected-footer">
+              <button class="action-btn primary">Save</button>
+              <button class="action-btn secondary">Cancel</button>
+              <span class="footer-info">Last updated: {{ currentTime }}</span>
+            </div>
+          </app-card>
+        </div>
+      </div>
+
+      <!-- Conditional Projection -->
+      <div class="example-group">
+        <h4>🔄 Conditional Projection</h4>
+        <div class="controls">
+          <label class="toggle-control">
+            <input type="checkbox" [(ngModel)]="showHeader" />
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Show Header</span>
+          </label>
+          <label class="toggle-control">
+            <input type="checkbox" [(ngModel)]="showFooter" />
+            <span class="toggle-slider"></span>
+            <span class="toggle-label">Show Footer</span>
+          </label>
+        </div>
+        <div class="example-container">
+          <app-card>
+            <div header *ngIf="showHeader" class="projected-header conditional">
+              <span class="header-icon">🎨</span>
+              <span class="header-title">Conditional Header</span>
+            </div>
+            
+            <div class="projected-body">
+              <h4>🎛️ Toggleable Content</h4>
+              <p>Toggle the switches above to show/hide projected content sections.</p>
+              <div class="status-display">
+                <div class="status-item">
+                  <span class="status-label">Header:</span>
+                  <span class="status-value" [class.active]="showHeader">
+                    {{ showHeader ? 'Visible' : 'Hidden' }}
+                  </span>
+                </div>
+                <div class="status-item">
+                  <span class="status-label">Footer:</span>
+                  <span class="status-value" [class.active]="showFooter">
+                    {{ showFooter ? 'Visible' : 'Hidden' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+            <div footer *ngIf="showFooter" class="projected-footer conditional">
+              <span class="footer-icon">⚡</span>
+              <span>Dynamic Footer Content</span>
+            </div>
+          </app-card>
+        </div>
+      </div>
+
+      <!-- Advanced Selectors Demo -->
+      <div class="example-group">
+        <h4>🎯 Advanced Selectors</h4>
+        <div class="example-container">
+          <div class="advanced-demo">
+            <app-card>
+              <!-- Attribute selector -->
+              <div slot="special" class="special-content">
+                <span class="selector-tag">[slot="special"]</span>
+                <span>Selected by attribute value</span>
+              </div>
+
+              <!-- Class selector -->
+              <div class="highlight-content">
+                <span class="selector-tag">.highlight-content</span>
+                <span>Selected by CSS class</span>
+              </div>
+
+              <!-- Element selector -->
+              <section class="element-content">
+                <span class="selector-tag">section</span>
+                <span>Selected by element tag</span>
+              </section>
+
+              <!-- Complex selector -->
+              <button class="action-btn primary complex-selector">
+                <span class="selector-tag">button.primary</span>
+                Complex Selector Button
+              </button>
+            </app-card>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- How it Works Flow -->
+    <div class="projection-flow">
+      <h4>🔄 How Content Projection Works:</h4>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="step-icon">📝</div>
+          <div class="step-content">
+            <h5>1. Define Content</h5>
+            <p>Parent defines content with selectors</p>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-icon">📦</div>
+          <div class="step-content">
+            <h5>2. ng-content Slots</h5>
+            <p>Child component defines projection slots</p>
+          </div>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="step-icon">🎯</div>
+          <div class="step-content">
+            <h5>3. Content Projection</h5>
+            <p>Angular projects content into slots</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Playground -->
+    <div class="playground-section">
+      <h4>🎮 Interactive Playground</h4>
+      <div class="playground-controls">
+        <label class="control-group">
+          <span class="control-label">Header Text:</span>
+          <input type="text" [(ngModel)]="playgroundHeader" class="text-input" />
+        </label>
+        <label class="control-group">
+          <span class="control-label">Body Content:</span>
+          <textarea [(ngModel)]="playgroundBody" class="textarea-input" rows="3"></textarea>
+        </label>
+        <label class="control-group">
+          <span class="control-label">Footer Text:</span>
+          <input type="text" [(ngModel)]="playgroundFooter" class="text-input" />
+        </label>
+      </div>
+      
+      <div class="playground-result">
+        <app-card>
+          <div header class="playground-header" *ngIf="playgroundHeader">
+            {{ playgroundHeader }}
+          </div>
+          <div class="playground-content">
+            {{ playgroundBody }}
+          </div>
+          <div footer class="playground-footer" *ngIf="playgroundFooter">
+            {{ playgroundFooter }}
+          </div>
+        </app-card>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Learning Notes Component -->
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+
+  <!-- Code Examples Component -->
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+
+  <!-- Explanation Sections Component -->
+  <app-explanation-section [sections]="explanationSections"></app-explanation-section>
+
+ 
+
+  <!-- Pros and Cons Component -->
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

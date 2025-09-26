@@ -1,0 +1,228 @@
+<div class="teaching-container">
+  <header class="page-header">
+    <h2>💾 Local & Session Storage</h2>
+    <p class="subtitle">Browser storage for component communication and state persistence</p>
+  </header>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>💡 Concept</h3>
+    </div>
+    <div class="concept-content">
+      <p>
+        Browser storage APIs (localStorage and sessionStorage) enable components to persist 
+        data across page reloads and browser sessions. Perfect for user preferences, 
+        application state, and cross-tab communication.
+      </p>
+    </div>
+  </section>
+
+  <section class="demo-section">
+    <div class="section-header">
+      <h3>🎯 Live Demo</h3>
+      <div class="flow-indicator">
+        <div class="storage-flow">
+          <span class="component-box">Component A</span>
+          <div class="arrow-down">
+            <span class="arrow-label">Save</span>
+          </div>
+          <span class="storage-box">💾 Browser Storage</span>
+          <div class="arrow-down">
+            <span class="arrow-label">Load</span>
+          </div>
+          <span class="component-box">Component B</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="storage-demos">
+      <!-- User Preferences Demo -->
+      <div class="demo-card preferences-demo">
+        <div class="card-header">
+          <h4>👤 User Preferences</h4>
+          <span class="storage-badge local">localStorage</span>
+        </div>
+        <div class="demo-content">
+          <div class="preference-controls">
+            <div class="control-group">
+              <label for="theme">Theme:</label>
+              <select id="theme" [(ngModel)]="preferences.theme" (change)="savePreferences()">
+                <option value="light">☀️ Light</option>
+                <option value="dark">🌙 Dark</option>
+                <option value="auto">🔄 Auto</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="language">Language:</label>
+              <select id="language" [(ngModel)]="preferences.language" (change)="savePreferences()">
+                <option value="en">🇺🇸 English</option>
+                <option value="es">🇪🇸 Spanish</option>
+                <option value="fr">🇫🇷 French</option>
+                <option value="de">🇩🇪 German</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="pageSize">Page Size:</label>
+              <input 
+                id="pageSize"
+                type="number" 
+                [(ngModel)]="preferences.pageSize" 
+                (change)="savePreferences()"
+                min="5" 
+                max="100">
+            </div>
+
+            <div class="checkbox-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="preferences.notifications" 
+                  (change)="savePreferences()">
+                🔔 Enable Notifications
+              </label>
+            </div>
+
+            <div class="checkbox-group">
+              <label>
+                <input 
+                  type="checkbox" 
+                  [(ngModel)]="preferences.autoSave" 
+                  (change)="savePreferences()">
+                💾 Auto Save
+              </label>
+            </div>
+          </div>
+
+          <div class="preferences-display">
+            <h5>Current Preferences:</h5>
+            <pre class="json-display">{{ preferences | json }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session State Demo -->
+      <div class="demo-card session-demo">
+        <div class="card-header">
+          <h4>🏃‍♂️ Session State</h4>
+          <span class="storage-badge session">sessionStorage</span>
+        </div>
+        <div class="demo-content">
+          <div class="session-controls">
+            <div class="control-group">
+              <label for="currentPage">Current Page:</label>
+              <input 
+                id="currentPage"
+                type="text" 
+                [(ngModel)]="sessionState.currentPage" 
+                (input)="saveSessionState()"
+                placeholder="e.g., dashboard">
+            </div>
+
+            <div class="control-group">
+              <label for="searchQuery">Search Query:</label>
+              <input 
+                id="searchQuery"
+                type="text" 
+                [(ngModel)]="sessionState.searchQuery" 
+                (input)="saveSessionState()"
+                placeholder="Enter search term...">
+            </div>
+
+            <div class="control-group">
+              <label for="viewMode">View Mode:</label>
+              <select id="viewMode" [(ngModel)]="sessionState.viewMode" (change)="saveSessionState()">
+                <option value="grid">🔲 Grid</option>
+                <option value="list">📄 List</option>
+              </select>
+            </div>
+
+            <div class="tag-controls">
+              <label>Filters:</label>
+              <div class="tag-input-group">
+                <input 
+                  #filterInput
+                  type="text" 
+                  placeholder="Add filter..."
+                  (keyup.enter)="addFilter(filterInput.value); filterInput.value = ''">
+                <button (click)="addFilter(filterInput.value); filterInput.value = ''" class="btn add-filter">
+                  ➕ Add
+                </button>
+              </div>
+              
+              <div class="tags">
+                <span *ngFor="let filter of sessionState.filters; let i = index" class="tag">
+                  {{ filter }}
+                  <button (click)="removeFilter(i)" class="tag-remove">❌</button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="session-display">
+            <h5>Session State:</h5>
+            <pre class="json-display">{{ sessionState | json }}</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- Storage Actions Demo -->
+      <div class="demo-card actions-demo">
+        <div class="card-header">
+          <h4>🔧 Storage Actions</h4>
+          <span class="storage-badge actions">Actions</span>
+        </div>
+        <div class="demo-content">
+          <div class="action-buttons">
+            <button (click)="exportData()" class="btn export">
+              📤 Export Data
+            </button>
+            <button (click)="importData()" class="btn import">
+              📥 Import Data
+            </button>
+            <button (click)="clearLocalStorage()" class="btn clear-local">
+              🗑️ Clear localStorage
+            </button>
+            <button (click)="clearSessionStorage()" class="btn clear-session">
+              🧹 Clear sessionStorage
+            </button>
+            <button (click)="resetToDefaults()" class="btn reset">
+              🔄 Reset to Defaults
+            </button>
+          </div>
+
+          <div class="storage-info">
+            <h5>Storage Information:</h5>
+            <div class="storage-stats">
+              <div class="stat-item">
+                <span class="label">localStorage Usage:</span>
+                <span class="value">{{ getStorageSize('localStorage') }} KB</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">sessionStorage Usage:</span>
+                <span class="value">{{ getStorageSize('sessionStorage') }} KB</span>
+              </div>
+              <div class="stat-item">
+                <span class="label">Last Updated:</span>
+                <span class="value">{{ lastUpdated | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <app-learning-notes [notes]="learningNotes"></app-learning-notes>
+  
+  <app-code-examples [examples]="codeExamples"></app-code-examples>
+  
+  <app-explanation-section 
+    title="🎯 How It Works" 
+    icon="🎯"
+    [sections]="explanationSections">
+  </app-explanation-section>
+  
+  <app-pros-cons-section [data]="prosConsData"></app-pros-cons-section>
+</div>

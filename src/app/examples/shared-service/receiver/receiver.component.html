@@ -1,0 +1,23 @@
+<div class="receiver-container">
+  <div class="component-header">
+    <span class="component-badge receiver">📥 Receiver Component</span>
+    <p>Subscribes to messages from shared service</p>
+  </div>
+  
+  <div class="current-message">
+    <h4>🔊 Current Message</h4>
+    <div class="message-display" [class.has-message]="message">
+      {{ message || 'Waiting for messages...' }}
+    </div>
+  </div>
+  
+  <div class="message-history" *ngIf="messageHistory.length > 0">
+    <h4>📚 Message History</h4>
+    <div class="history-list">
+      <div *ngFor="let msg of messageHistory; let i = index" class="history-item">
+        {{ i + 1 }}. {{ msg }}
+      </div>
+    </div>
+    <button (click)="clearHistory()" class="clear-btn">🗑️ Clear History</button>
+  </div>
+</div>
